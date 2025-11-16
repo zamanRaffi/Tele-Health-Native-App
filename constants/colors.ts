@@ -1,0 +1,31 @@
+export default {
+    light: {
+      tint: '#0891B2',
+      primary: '#0891B2',
+      secondary: '#06B6D4',
+      background: '#FFFFFF',
+      card: '#F0F9FF',
+      text: '#1E293B',
+      textSecondary: '#64748B',
+      border: '#E2E8F0',
+      success: '#10B981',
+      warning: '#F59E0B',
+      error: '#EF4444',
+      info: '#3B82F6',
+    },
+    dark: {
+      tint: '#06B6D4',
+      primary: '#06B6D4',
+      secondary: '#0891B2',
+      background: '#0F172A',
+      card: '#1E293B',
+      text: '#F1F5F9',
+      textSecondary: '#94A3B8',
+      border: '#334155',
+      success: '#10B981',
+      warning: '#F59E0B',
+      error: '#EF4444',
+      info: '#3B82F6',
+    },
+  };
+  

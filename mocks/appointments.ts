@@ -1,0 +1,42 @@
+import { Appointment } from '../types';
+
+export const mockAppointments: Appointment[] = [
+  {
+    id: '1',
+    patientId: 'patient1',
+    doctorId: '1',
+    doctorName: 'Dr. Sarah Johnson',
+    doctorSpecialization: 'Cardiologist',
+    patientName: 'John Doe',
+    date: '2025-01-15',
+    time: '10:00 AM',
+    type: 'video',
+    status: 'upcoming',
+    notes: 'Follow-up consultation for heart health',
+  },
+  {
+    id: '2',
+    patientId: 'patient1',
+    doctorId: '2',
+    doctorName: 'Dr. Michael Chen',
+    doctorSpecialization: 'Dermatologist',
+    patientName: 'John Doe',
+    date: '2025-01-18',
+    time: '2:30 PM',
+    type: 'offline',
+    status: 'upcoming',
+    notes: 'Skin checkup',
+  },
+  {
+    id: '3',
+    patientId: 'patient1',
+    doctorId: '3',
+    doctorName: 'Dr. Emily Rodriguez',
+    doctorSpecialization: 'General Physician',
+    patientName: 'John Doe',
+    date: '2025-01-10',
+    time: '11:00 AM',
+    type: 'video',
+    status: 'completed',
+  },
+];
