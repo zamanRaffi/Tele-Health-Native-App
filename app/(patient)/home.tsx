@@ -35,20 +35,22 @@ export default function PatientHome() {
         options={{
           headerShown: true,
           headerTitle: '',
-          headerStyle: {
-            backgroundColor: Colors.light.background,
-          },
+          headerStyle: { backgroundColor: Colors.light.background },
           headerShadowVisible: false,
         }}
       />
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 120 }}
+      >
+        {/* Header */}
         <View style={styles.header}>
-          <View>
-            <Text style={styles.greeting}>Hello, {user?.name || 'Guest'}!</Text>
-            <Text style={styles.subtitle}>How can we help you today?</Text>
-          </View>
+          <Text style={styles.greeting}>Hello, {user?.name || 'Guest'}!</Text>
+          <Text style={styles.subtitle}>How can we help you today?</Text>
         </View>
 
+        {/* Upcoming Appointments */}
         {upcomingAppointments.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Upcoming Appointments</Text>
@@ -57,7 +59,6 @@ export default function PatientHome() {
                 key={appointment.id}
                 style={styles.appointmentCard}
                 onPress={() => router.push('/appoinments')}
-
               >
                 <View style={styles.appointmentHeader}>
                   <View style={styles.appointmentIconContainer}>
@@ -103,6 +104,7 @@ export default function PatientHome() {
           </View>
         )}
 
+        {/* Find a Doctor */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Find a Doctor</Text>
           <View style={styles.searchContainer}>
@@ -120,19 +122,22 @@ export default function PatientHome() {
             />
           </View>
 
-          <View style={styles.doctorsList}>
+          <View style={{ gap: 16, paddingBottom: 16 }}>
             {filteredDoctors.map((doctor) => (
               <TouchableOpacity
                 key={doctor.id}
                 style={styles.doctorCard}
-                onPress={() => {
+                onPress={() =>
                   router.push({
                     pathname: '/book-appointment',
                     params: { doctorId: doctor.id },
-                  });
-                }}
+                  })
+                }
               >
-                <Image source={{ uri: doctor.avatar }} style={styles.doctorAvatar} />
+                <Image
+                  source={{ uri: doctor.avatar }}
+                  style={styles.doctorAvatar}
+                />
                 <View style={styles.doctorInfo}>
                   <View style={styles.doctorNameRow}>
                     <Text style={styles.doctorName}>{doctor.name}</Text>
@@ -146,11 +151,7 @@ export default function PatientHome() {
                   <Text style={styles.doctorSpec}>{doctor.specialization}</Text>
                   <View style={styles.doctorMeta}>
                     <View style={styles.metaItem}>
-                      <Feather
-                        name="star"
-                        size={14}
-                        color="#F59E0B"
-                      />
+                      <Feather name="star" size={14} color="#F59E0B" />
                       <Text style={styles.metaText}>
                         {doctor.rating} • {doctor.experience}y exp
                       </Text>
@@ -170,15 +171,17 @@ export default function PatientHome() {
                   )}
                 </View>
                 <View style={styles.doctorActions}>
-                  <Text style={styles.consultationFee}>${doctor.consultationFee}</Text>
+                  <Text style={styles.consultationFee}>
+                    ${doctor.consultationFee}
+                  </Text>
                   <TouchableOpacity
                     style={styles.bookButton}
-                    onPress={() => {
+                    onPress={() =>
                       router.push({
                         pathname: '/book-appointment',
                         params: { doctorId: doctor.id },
-                      });
-                    }}
+                      })
+                    }
                   >
                     <Text style={styles.bookButtonText}>Book</Text>
                   </TouchableOpacity>
@@ -192,213 +195,50 @@ export default function PatientHome() {
   );
 }
 
-// Styles remain the same as your original code
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: Colors.light.background,
+    paddingHorizontal: 16,
+    paddingTop: 70,
   },
   header: {
-    padding: 24,
-    paddingTop: 8,
+    paddingVertical: 24,
   },
-  greeting: {
-    fontSize: 28,
-    fontWeight: '700' as const,
-    color: Colors.light.text,
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: Colors.light.textSecondary,
-  },
-  section: {
-    paddingHorizontal: 24,
-    marginBottom: 32,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: '700' as const,
-    color: Colors.light.text,
-    marginBottom: 16,
-  },
-  appointmentCard: {
-    backgroundColor: '#E0F2FE',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#BAE6FD',
-  },
-  appointmentHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  appointmentIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  appointmentInfo: {
-    flex: 1,
-  },
-  appointmentDoctor: {
-    fontSize: 16,
-    fontWeight: '600' as const,
-    color: Colors.light.text,
-    marginBottom: 2,
-  },
-  appointmentSpec: {
-    fontSize: 14,
-    color: Colors.light.textSecondary,
-  },
-  typeBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
-  },
-  typeBadgeVideo: {
-    backgroundColor: '#DBEAFE',
-  },
-  typeBadgeOffline: {
-    backgroundColor: '#FEF3C7',
-  },
-  typeBadgeText: {
-    fontSize: 12,
-    fontWeight: '600' as const,
-  },
-  typeBadgeTextVideo: {
-    color: '#1E40AF',
-  },
-  typeBadgeTextOffline: {
-    color: '#92400E',
-  },
-  appointmentDateTime: {
-    fontSize: 14,
-    color: Colors.light.text,
-    fontWeight: '500' as const,
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.light.card,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 4,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: Colors.light.border,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: Colors.light.text,
-    paddingVertical: 12,
-    marginLeft: 12,
-  },
-  doctorsList: {
-    gap: 16,
-  },
-  doctorCard: {
-    backgroundColor: Colors.light.card,
-    borderRadius: 16,
-    padding: 16,
-    flexDirection: 'row',
-    borderWidth: 1,
-    borderColor: Colors.light.border,
-  },
-  doctorAvatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 12,
-    marginRight: 16,
-  },
-  doctorInfo: {
-    flex: 1,
-  },
-  doctorNameRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 4,
-    gap: 8,
-  },
-  doctorName: {
-    fontSize: 18,
-    fontWeight: '600' as const,
-    color: Colors.light.text,
-  },
-  availableBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#D1FAE5',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
-    gap: 4,
-  },
-  availableDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#10B981',
-  },
-  availableText: {
-    fontSize: 11,
-    fontWeight: '600' as const,
-    color: '#047857',
-  },
-  doctorSpec: {
-    fontSize: 14,
-    color: Colors.light.textSecondary,
-    marginBottom: 8,
-  },
-  doctorMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  metaItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  metaText: {
-    fontSize: 13,
-    color: Colors.light.textSecondary,
-  },
-  nextAvailable: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  nextAvailableText: {
-    fontSize: 13,
-    color: Colors.light.primary,
-    fontWeight: '500' as const,
-  },
-  doctorActions: {
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
-  },
-  consultationFee: {
-    fontSize: 18,
-    fontWeight: '700' as const,
-    color: Colors.light.text,
-  },
-  bookButton: {
-    backgroundColor: Colors.light.primary,
-    paddingHorizontal: 24,
-    paddingVertical: 10,
-    borderRadius: 10,
-  },
-  bookButtonText: {
-    fontSize: 14,
-    fontWeight: '600' as const,
-    color: '#FFFFFF',
-  },
+  greeting: { fontSize: 28, fontWeight: '700', color: Colors.light.text, marginBottom: 4 },
+  subtitle: { fontSize: 16, color: Colors.light.textSecondary },
+  section: { marginBottom: 32 },
+  sectionTitle: { fontSize: 20, fontWeight: '700', color: Colors.light.text, marginBottom: 16 },
+  appointmentCard: { backgroundColor: '#E0F2FE', borderRadius: 16, padding: 20, marginBottom: 12, borderWidth: 1, borderColor: '#BAE6FD' },
+  appointmentHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
+  appointmentIconContainer: { width: 44, height: 44, borderRadius: 22, backgroundColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+  appointmentInfo: { flex: 1 },
+  appointmentDoctor: { fontSize: 16, fontWeight: '600', color: Colors.light.text, marginBottom: 2 },
+  appointmentSpec: { fontSize: 14, color: Colors.light.textSecondary },
+  typeBadge: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 10 },
+  typeBadgeVideo: { backgroundColor: '#DBEAFE' },
+  typeBadgeOffline: { backgroundColor: '#FEF3C7' },
+  typeBadgeText: { fontSize: 12, fontWeight: '600' },
+  typeBadgeTextVideo: { color: '#1E40AF' },
+  typeBadgeTextOffline: { color: '#92400E' },
+  appointmentDateTime: { fontSize: 14, color: Colors.light.text, fontWeight: '500' },
+  searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.light.card, borderRadius: 16, paddingHorizontal: 16, paddingVertical: 10, marginBottom: 20, borderWidth: 1, borderColor: Colors.light.border },
+  searchInput: { flex: 1, fontSize: 16, color: Colors.light.text, paddingVertical: 0, marginLeft: 12 },
+  doctorCard: { backgroundColor: Colors.light.card, borderRadius: 16, padding: 20, flexDirection: 'row', borderWidth: 1, borderColor: Colors.light.border },
+  doctorAvatar: { width: 84, height: 84, borderRadius: 14, marginRight: 16 },
+  doctorInfo: { flex: 1, justifyContent: 'center' },
+  doctorNameRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 4, gap: 8 },
+  doctorName: { fontSize: 18, fontWeight: '600', color: Colors.light.text },
+  availableBadge: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#D1FAE5', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8, gap: 4 },
+  availableDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#10B981' },
+  availableText: { fontSize: 11, fontWeight: '600', color: '#047857' },
+  doctorSpec: { fontSize: 14, color: Colors.light.textSecondary, marginBottom: 8 },
+  doctorMeta: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
+  metaItem: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  metaText: { fontSize: 13, color: Colors.light.textSecondary },
+  nextAvailable: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  nextAvailableText: { fontSize: 13, color: Colors.light.primary, fontWeight: '500' },
+  doctorActions: { justifyContent: 'space-between', alignItems: 'flex-end' },
+  consultationFee: { fontSize: 18, fontWeight: '700', color: Colors.light.text, marginBottom: 8 },
+  bookButton: { backgroundColor: Colors.light.primary, paddingHorizontal: 20, paddingVertical: 12, borderRadius: 12 },
+  bookButtonText: { fontSize: 14, fontWeight: '600', color: '#FFFFFF' },
 });

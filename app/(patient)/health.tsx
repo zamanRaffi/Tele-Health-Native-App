@@ -198,15 +198,17 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: Colors.light.background,
+      paddingVertical: 90,
+      paddingBottom: 50,
     },
     content: {
       flex: 1,
     },
     section: {
-      padding: 24,
+      padding: 30,
     },
     sectionTitle: {
-      fontSize: 18,
+      fontSize: 24,
       fontWeight: '700' as const,
       color: Colors.light.text,
       marginBottom: 16,

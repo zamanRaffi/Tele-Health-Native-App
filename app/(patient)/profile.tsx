@@ -164,8 +164,8 @@ export default function PatientProfile() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.light.background },
-  header: { alignItems: 'center', paddingVertical: 32, paddingHorizontal: 24 },
+  container: { flex: 1, backgroundColor: Colors.light.background,paddingVertical: 90,},
+  header: { alignItems: 'center', paddingHorizontal: 24 },
   avatar: { width: 100, height: 100, borderRadius: 50, marginBottom: 8 },
   name: { fontSize: 24, fontWeight: '700' as const, color: Colors.light.text, marginBottom: 4 },
   role: { fontSize: 16, color: Colors.light.textSecondary },

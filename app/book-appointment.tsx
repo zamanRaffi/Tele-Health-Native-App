@@ -32,6 +32,8 @@ const dates = [
   { date: '2025-01-17', day: 'Wed' },
   { date: '2025-01-18', day: 'Thu' },
   { date: '2025-01-19', day: 'Fri' },
+  { date: '2025-01-20', day: 'Sat' },
+  { date: '2025-01-21', day: 'Sun' },
 ];
 
 export default function BookAppointment() {
@@ -261,6 +263,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.light.background,
+    // paddingBottom: 100,
   },
   doctorCard: {
     flexDirection: 'row',
@@ -306,7 +309,7 @@ const styles = StyleSheet.create({
     color: Colors.light.primary,
   },
   section: {
-    padding: 24,
+    padding: 26,
   },
   sectionTitle: {
     fontSize: 18,
@@ -343,8 +346,8 @@ const styles = StyleSheet.create({
     color: Colors.light.primary,
   },
   dateScroll: {
-    marginHorizontal: -24,
-    paddingHorizontal: 24,
+    marginHorizontal: -20,
+    paddingHorizontal:5,
   },
   dateButton: {
     alignItems: 'center',

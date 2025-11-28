@@ -60,7 +60,7 @@ export const [AppContext, useApp] = createContextHook(() => {
         userToLogin = {
           id: role === 'patient' ? 'patient1' : 'doctor1',
           email,
-          name: role === 'patient' ? 'John Doe' : 'Dr. Sarah Johnson',
+          name: role === 'patient' ? 'John Doe' : 'Dr.Raffi Zaman',
           role,
           phone: '+1 234 567 8900',
           avatar: role === 'patient' 

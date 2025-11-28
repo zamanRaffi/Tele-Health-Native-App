@@ -25,7 +25,7 @@ interface Appointment {
   callLink?: string; 
 }
 
-export default function PatientAppointments() {
+export default function Appointments() {
   const { appointments, cancelAppointment } = useApp();
 
   const upcoming: Appointment[] = appointments.filter((apt) => apt.status === 'upcoming');
@@ -140,6 +140,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.light.background,
+    paddingTop: 90,
   },
   section: {
     padding: 24,

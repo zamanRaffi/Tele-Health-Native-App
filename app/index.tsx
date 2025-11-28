@@ -40,7 +40,7 @@ export default function Welcome() {
           </View>
         </View>
 
-        <Text style={styles.title}>MediCare</Text>
+        <Text style={styles.title}>Uppocare</Text>
 
         <Text style={styles.subtitle}>
           Your Health, Our Priority{"\n"}Anytime, Anywhere

@@ -1,23 +1,23 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  ScrollView,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
   Alert,
 } from "react-native";
-import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
-import { useApp } from "../context/AppContext";
-import Colors from "../constants/colors";
-import { UserRole } from "../types";
+import { BlurView } from "expo-blur";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React from "react";
+import { useRouter } from "expo-router";
+import Colors from "../constants/colors";
+import { useApp } from "../context/AppContext";
+import { UserRole } from "../types";
 
 export default function Login() {
   const router = useRouter();
@@ -26,7 +26,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [selectedRole, setSelectedRole] = useState<UserRole>("patient");
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -34,27 +34,23 @@ export default function Login() {
       return;
     }
 
-    setIsLoading(true);
+    setLoading(true);
     try {
-      // Check if the user has signed up
       const storedData = await AsyncStorage.getItem(`@telehealth_signup_${email}`);
       if (!storedData) {
         Alert.alert("No Account", "This email is not registered. Please sign up first.");
+        setLoading(false);
         return;
       }
 
       const userData = JSON.parse(storedData);
-
       if (userData.role !== selectedRole) {
         Alert.alert("Role Mismatch", `Please select the correct role (${userData.role})`);
+        setLoading(false);
         return;
       }
 
-      // Simple password check (since local storage only stores email/user)
-      // If you want, you can also store password in signup for demo purposes
-      // For now, we skip password check since your AppContext doesn't store it
       const success = await login(email, password, selectedRole);
-
       if (success) {
         if (selectedRole === "patient") {
           router.replace("/(patient)/home");
@@ -64,156 +60,267 @@ export default function Login() {
       } else {
         Alert.alert("Error", "Login failed. Please try again.");
       }
-    } catch (error) {
-      console.error("Login error:", error);
-      Alert.alert("Error", "An error occurred during login");
-    } finally {
-      setIsLoading(false);
+    } catch (e) {
+      console.log(e);
+      Alert.alert("Error", "An error occurred during login.");
     }
+
+    setLoading(false);
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardView}
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-          {/* Back Button */}
-          {/* <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-            <Feather name="arrow-left" size={24} color={Colors.light.text} />
-          </TouchableOpacity> */}
+        <ScrollView
+          contentContainerStyle={styles.scroll}
+          showsVerticalScrollIndicator={false}
+        >
 
           <Text style={styles.title}>Welcome Back</Text>
           <Text style={styles.subtitle}>Sign in to continue</Text>
 
-          {/* ROLE SELECT */}
+          {/* Role Selector */}
           <View style={styles.roleContainer}>
             <Text style={styles.roleLabel}>I am a:</Text>
+
             <View style={styles.roleButtons}>
               <TouchableOpacity
-                style={[styles.roleButton, selectedRole === "patient" && styles.roleButtonActive]}
+                style={[
+                  styles.roleButton,
+                  selectedRole === "patient" && styles.activeRoleButton,
+                ]}
                 onPress={() => setSelectedRole("patient")}
               >
                 <Feather
                   name="user"
-                  size={20}
-                  color={selectedRole === "patient" ? Colors.light.primary : Colors.light.textSecondary}
+                  size={18}
+                  color={
+                    selectedRole === "patient"
+                      ? Colors.light.primary
+                      : Colors.light.textSecondary
+                  }
                 />
-                <Text style={[styles.roleButtonText, selectedRole === "patient" && styles.roleButtonTextActive]}>
+                <Text
+                  style={[
+                    styles.roleText,
+                    selectedRole === "patient" && styles.activeRoleText,
+                  ]}
+                >
                   Patient
                 </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[styles.roleButton, selectedRole === "doctor" && styles.roleButtonActive]}
+                style={[
+                  styles.roleButton,
+                  selectedRole === "doctor" && styles.activeRoleButton,
+                ]}
                 onPress={() => setSelectedRole("doctor")}
               >
                 <Feather
                   name="user"
-                  size={20}
-                  color={selectedRole === "doctor" ? Colors.light.primary : Colors.light.textSecondary}
+                  size={18}
+                  color={
+                    selectedRole === "doctor"
+                      ? Colors.light.primary
+                      : Colors.light.textSecondary
+                  }
                 />
-                <Text style={[styles.roleButtonText, selectedRole === "doctor" && styles.roleButtonTextActive]}>
+                <Text
+                  style={[
+                    styles.roleText,
+                    selectedRole === "doctor" && styles.activeRoleText,
+                  ]}
+                >
                   Doctor
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
 
-          {/* FORM */}
-          <View style={styles.form}>
+          {/* GLASS FORM */}
+          <BlurView intensity={25} tint="light" style={styles.glassBox}>
             <View style={styles.inputContainer}>
               <Feather name="mail" size={20} color={Colors.light.textSecondary} />
               <TextInput
-                style={styles.input}
                 placeholder="Email"
                 value={email}
                 onChangeText={setEmail}
-                keyboardType="email-address"
                 autoCapitalize="none"
+                keyboardType="email-address"
                 placeholderTextColor={Colors.light.textSecondary}
+                style={styles.input}
               />
             </View>
 
             <View style={styles.inputContainer}>
               <Feather name="lock" size={20} color={Colors.light.textSecondary} />
               <TextInput
-                style={styles.input}
                 placeholder="Password"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
                 placeholderTextColor={Colors.light.textSecondary}
+                style={styles.input}
               />
             </View>
 
-            <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={isLoading}>
-              <Text style={styles.buttonText}>{isLoading ? "Signing In..." : "Sign In"}</Text>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleLogin}
+              disabled={loading}
+            >
+              <Text style={styles.buttonText}>
+                {loading ? "Signing In..." : "Sign In"}
+              </Text>
             </TouchableOpacity>
+          </BlurView>
 
-            <View style={styles.footer}>
-              <Text style={styles.footerText}>Don't have an account? </Text>
-              <TouchableOpacity onPress={() => router.push("/signup")}>
-                <Text style={styles.footerLink}>Sign Up</Text>
-              </TouchableOpacity>
-            </View>
+          <View style={styles.footer}>
+            <Text style={styles.footerTxt}>Don't have an account?</Text>
+            <TouchableOpacity onPress={() => router.push("/signup")}>
+              <Text style={styles.footerLink}> Sign Up</Text>
+            </TouchableOpacity>
           </View>
+
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
+
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.light.background },
-  keyboardView: { flex: 1 },
-  scrollContent: { padding: 24 },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: Colors.light.card,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 24,
+  container: {
+    flex: 1,
+    backgroundColor: Colors.light.background,
   },
-  title: { fontSize: 32, fontWeight: "700", color: Colors.light.text, marginBottom: 8 },
-  subtitle: { fontSize: 16, color: Colors.light.textSecondary, marginBottom: 32 },
-  roleContainer: { marginBottom: 32 },
-  roleLabel: { fontSize: 16, fontWeight: "600", marginBottom: 12, color: Colors.light.text },
-  roleButtons: { flexDirection: "row", gap: 12 },
+
+  scroll: {
+    padding: 24,
+  },
+
+  title: {
+    fontSize: 34,
+    fontWeight: "800",
+    color: Colors.light.text,
+    marginBottom: 6,
+  },
+
+  subtitle: {
+    fontSize: 17,
+    color: Colors.light.textSecondary,
+    marginBottom: 32,
+  },
+
+  roleContainer: {
+    marginBottom: 28,
+  },
+
+  roleLabel: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: Colors.light.text,
+    marginBottom: 12,
+  },
+
+  roleButtons: {
+    flexDirection: "row",
+    gap: 12,
+  },
+
   roleButton: {
     flex: 1,
+    paddingVertical: 14,
+    borderRadius: 14,
+    backgroundColor: Colors.light.card,
+    borderWidth: 1,
+    borderColor: Colors.light.border,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 16,
-    backgroundColor: Colors.light.card,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: "transparent",
-    gap: 8,
+    gap: 6,
   },
-  roleButtonActive: { backgroundColor: "#E0F2FE", borderColor: Colors.light.primary },
-  roleButtonText: { fontSize: 16, fontWeight: "600", color: Colors.light.textSecondary },
-  roleButtonTextActive: { color: Colors.light.primary },
-  form: { gap: 16 },
+
+  activeRoleButton: {
+    backgroundColor: "#E0F2FE",
+    borderColor: Colors.light.primary,
+  },
+
+  roleText: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: Colors.light.textSecondary,
+  },
+
+  activeRoleText: {
+    color: Colors.light.primary,
+  },
+
+  glassBox: {
+    padding: 20,
+    borderRadius: 20,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.3)",
+
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 6,
+  },
+
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.light.card,
-    borderRadius: 12,
+    backgroundColor: "rgba(255,255,255,0.6)",
     paddingHorizontal: 16,
-    paddingVertical: 4,
+    paddingVertical: 12,
+    borderRadius: 12,
+    marginBottom: 16,
     borderWidth: 1,
     borderColor: Colors.light.border,
-    gap: 12,
   },
-  input: { flex: 1, fontSize: 16, color: Colors.light.text, paddingVertical: 14 },
-  button: { backgroundColor: Colors.light.primary, paddingVertical: 18, borderRadius: 12, alignItems: "center", marginTop: 8 },
-  buttonText: { fontSize: 18, fontWeight: "600", color: "#fff" },
-  footer: { flexDirection: "row", justifyContent: "center", alignItems: "center", marginTop: 16 },
-  footerText: { fontSize: 16, color: Colors.light.textSecondary },
-  footerLink: { fontSize: 16, fontWeight: "600", color: Colors.light.primary },
+
+  input: {
+    flex: 1,
+    marginLeft: 10,
+    fontSize: 16,
+    color: Colors.light.text,
+  },
+
+  button: {
+    backgroundColor: Colors.light.primary,
+    paddingVertical: 16,
+    borderRadius: 14,
+    alignItems: "center",
+    marginTop: 10,
+  },
+
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "700",
+  },
+
+  footer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 24,
+  },
+
+  footerTxt: {
+    color: Colors.light.textSecondary,
+    fontSize: 16,
+  },
+
+  footerLink: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: Colors.light.primary,
+  },
 });
