@@ -265,13 +265,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.3)",
+     borderColor: "rgba(255,255,255,0.3)",
 
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.15,
     shadowRadius: 10,
-    elevation: 6,
+    // elevation: 6,
   },
 
   inputContainer: {

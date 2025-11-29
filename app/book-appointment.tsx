@@ -247,6 +247,18 @@ export default function BookAppointment() {
         </View>
 
         <View style={styles.section}>
+  <TouchableOpacity
+  style={styles.bookButton}
+  onPress={() => router.push(`/(patient)/payment`)}
+>
+  <Text style={styles.bookButtonText}>
+    Pay Consultation Fee: ${doctor.consultationFee}
+  </Text>
+</TouchableOpacity>
+
+</View>
+
+        <View style={styles.section}>
           <TouchableOpacity
             style={styles.bookButton}
             onPress={handleBookAppointment}
