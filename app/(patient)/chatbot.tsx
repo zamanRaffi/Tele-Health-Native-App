@@ -49,6 +49,8 @@ export default function ChatbotScreen() {
         }
       );
       const data = await response.json();
+      //console.log("GEMINI RESPONSE:", JSON.stringify(data, null, 2));
+
       return data?.candidates?.[0]?.content?.parts?.[0]?.text || "I couldn't understand that. Try again!";
     } catch (err) {
       console.error('Gemini API Error:', err);
